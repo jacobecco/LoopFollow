@@ -20,13 +20,18 @@ jobs:
       - name: Install dependencies
         run: bundle install
 
-      - name: Renew App Store profile (match)
+      - name: Renew App Store profile (via Fastfile lane)
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
 
-          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          APP_STORE_CONNECT_API_KEY: ${{ secrets.ASC_KEY_P8_BASE64 }}
+          # Match-Secrets repo'ya yazabilmek için
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+
+          # Fastfile'daki isimlerle aynı olmalı
+          TEAMID: ${{ secrets.TEAMID }}
+          FASTLANE_KEY_ID: ${{ secrets.FASTLANE_KEY_ID }}
+          FASTLANE_ISSUER_ID: ${{ secrets.FASTLANE_ISSUER_ID }}
+          FASTLANE_KEY: ${{ secrets.FASTLANE_KEY }}
         run: |
-          bundle exec fastlane match appstore --force
+          bundle exec fastlane renew_match_appstore
