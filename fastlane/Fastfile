@@ -249,15 +249,20 @@ end
 
 lane :renew_match_appstore do
   app_store_connect_api_key(
-    key_id: ENV["ASC_KEY_ID"],
-    issuer_id: ENV["ASC_ISSUER_ID"],
-    key_content: ENV["ASC_KEY_P8_BASE64"],
-    is_key_content_base64: true
+    key_id: ENV["FASTLANE_KEY_ID"],
+    issuer_id: ENV["FASTLANE_ISSUER_ID"],
+    key_content: ENV["FASTLANE_KEY"]
   )
 
   match(
     type: "appstore",
-    force: true
+    force: true,
+    git_basic_authorization: Base64.strict_encode64(
+      "#{ENV['GITHUB_REPOSITORY_OWNER']}:#{ENV['GH_PAT']}"
+    ),
+    app_identifier: [
+      "com.#{ENV['TEAMID']}.LoopFollow"
+    ]
   )
 end
 
